@@ -1,0 +1,58 @@
+{
+  "private": true,
+  "name": "remix-firebase-portal",
+  "description": "",
+  "license": "",
+  "scripts": {
+    "prebuild": "rimraf ./build ./public/build",
+    "build": "dotenv -e .env.prod yarn build:css && yarn build:emails && remix build",
+    "dev": "dotenv concurrently \"yarn watch:css\" \"remix run\" -k",
+    "dev:https": "concurrently \"yarn dev\" \"ts-node ./express/server.ts\" -k",
+    "start": "dotenv -e .env.prod remix-serve build",
+    "start:functions": "dotenv concurrently \"yarn dev\" \"yarn --cwd functions dev\" \"firebase emulators:start\"",
+    "scaffold": "ts-node-transpile-only ./tools/scaffold-component.ts",
+    "scaffold:route": "ts-node-transpile-only ./tools/scaffold-route.ts",
+    "watch:css": "tailwindcss --output ./app/styles/tailwind.css --config ./tailwind/tailwind.config.js --watch",
+    "build:css": "tailwindcss --output ./app/styles/tailwind.css --config ./tailwind/tailwind.config.js --minify",
+    "build:emails": "yarn --cwd app/server/mailer maizzle build",
+    "deploy": "dotenv -e .env.prod yarn build && firebase deploy --only hosting && yarn --cwd functions build && firebase deploy --only functions:APP_NAME"
+  },
+  "dependencies": {
+    "@headlessui/react": "1.4.3",
+    "@heroicons/react": "1.0.5",
+    "@remix-run/node": "1.1.3",
+    "@remix-run/react": "1.1.3",
+    "@remix-run/serve": "1.1.3",
+    "axios": "0.25.0",
+    "clsx": "1.1.1",
+    "firebase": "9.6.6",
+    "firebase-admin": "10.0.2",
+    "nodemailer": "6.7.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-router-dom": "6.2.1",
+    "remix": "1.1.3",
+    "yup": "0.32.11"
+  },
+  "devDependencies": {
+    "@maizzle/cli": "1.4.0",
+    "@maizzle/framework": "3.7.2",
+    "@remix-run/dev": "1.1.3",
+    "@tailwindcss/forms": "0.4.0",
+    "@tailwindcss/typography": "0.5.1",
+    "@types/nodemailer": "6.4.4",
+    "@types/react": "17.0.39",
+    "@types/react-dom": "17.0.11",
+    "concurrently": "7.0.0",
+    "dotenv-cli": "5.0.0",
+    "express-http-proxy": "1.6.3",
+    "prettier": "2.5.1",
+    "tailwindcss": "3.0.22",
+    "ts-node": "10.5.0",
+    "typescript": "4.5.5"
+  },
+  "engines": {
+    "node": ">14"
+  },
+  "sideEffects": false
+}
